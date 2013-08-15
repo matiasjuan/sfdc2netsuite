@@ -14,7 +14,7 @@
             <property value="so2opp.grf" name="transformationGraphPath"/>
         </properties>
     </global-element>
-    <flow SubFlow="false" name="check.topics" entity-id="e84cb52a-2dd0-4e1f-80eb-62ddf2e978d3">
+    <flow SubFlow="false" name="process.opportunity" entity-id="61fe3a62-3fa0-431f-8b2a-0aa35194a76a">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
@@ -24,83 +24,13 @@
         </properties>
         <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#1">
             <graphicalData height="0" width="0" y="0" x="0"/>
-            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#1">
-                <graphicalData height="0" width="0" y="0" x="0"/>
-                <properties>
-                    <property value="${http.port}" name="port"/>
-                    <property value="localhost" name="host"/>
-                    <property name="businessEventsLabel"/>
-                    <property name="followRedirects"/>
-                    <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property name="keep-alive"/>
-                    <property name="contentType"/>
-                    <property name="disableTransportTransformer"/>
-                    <property name="password"/>
-                    <property value="request-response" name="exchange-pattern"/>
-                    <property name="tracking:enable-default-events"/>
-                    <property name="ref"/>
-                    <property name="transformer-refs"/>
-                    <property name="httpLabel"/>
-                    <property name="address"/>
-                    <property value="checktopics" name="path"/>
-                    <property name="encoding"/>
-                    <property name="responseTransformer-refs"/>
-                    <property name="method"/>
-                    <property name="user"/>
-                    <property name="responseTimeout"/>
-                    <property name="mimeType"/>
-                    <property value="4" name="auxiliary;index"/>
-                    <property name="connector-ref"/>
-                </properties>
-            </endpoint>
-            <pattern type="http://www.mulesoft.org/schema/mule/sfdc/sfdc-connector" name="Salesforce" entity-id="Salesforce#1">
-                <graphicalData height="0" width="0" y="0" x="0"/>
-                <properties>
-                    <property name=""/>
-                    <property name="proxyUsername"/>
-                    <property name="securityToken"/>
-                    <property name="proxyHost"/>
-                    <property value="select Name from PushTopic" name="query"/>
-                    <property value="http://www.mulesoft.org/schema/mule/sfdc/query" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property name="proxyPort"/>
-                    <property name="password"/>
-                    <property name="url"/>
-                    <property name="username"/>
-                    <property value="${sfdc.access.token.id}" name="accessTokenId"/>
-                    <property value="Salesforce__OAuth_" name="config-ref"/>
-                    <property value="5" name="auxiliary;index"/>
-                    <property name="proxyPassword"/>
-                </properties>
-            </pattern>
-            <pattern type="http://www.mulesoft.org/schema/mule/core/object-to-string-transformer" name="Object to String" entity-id="Object to String#1">
-                <graphicalData height="0" width="0" y="0" x="0"/>
-                <properties>
-                    <property name="returnClass"/>
-                    <property name="ignoreBadInput"/>
-                    <property name="encoding"/>
-                    <property name="mimeType"/>
-                    <property value="6" name="auxiliary;index"/>
-                </properties>
-            </pattern>
-        </lane>
-    </flow>
-    <flow SubFlow="false" name="main.flow" entity-id="95289ef0-0325-4b15-9250-10318aac63b2">
-        <properties>
-            <property name="processingStrategy"/>
-            <property name="processingStrategy2"/>
-            <property name="bussinessEventsLabel"/>
-            <property name="tracking:enable-default-events"/>
-            <property value="7" name="auxiliary;index"/>
-        </properties>
-        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#2">
-            <graphicalData height="0" width="0" y="0" x="0"/>
             <endpoint message-exchange-pattern="OneWay" direction="Inbound" type="http://www.mulesoft.org/schema/mule/sfdc/endpoint" name="Salesforce (Streaming)" entity-id="Salesforce (Streaming)#1">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="/opp3" name="topic"/>
                     <property value="http://www.mulesoft.org/schema/mule/sfdc/subscribe-topic" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
                     <property value="Salesforce__OAuth_" name="config-ref"/>
-                    <property value="8" name="auxiliary;index"/>
+                    <property value="4" name="auxiliary;index"/>
                     <property value="one-way" name="exchange-pattern"/>
                 </properties>
             </endpoint>
@@ -110,7 +40,7 @@
                     <property value="subscription received #[payload]" name="message"/>
                     <property name="category"/>
                     <property value="INFO" name="level"/>
-                    <property value="9" name="auxiliary;index"/>
+                    <property value="5" name="auxiliary;index"/>
                 </properties>
             </pattern>
             <pattern type="http://www.mulesoft.org/schema/mule/core/variable-transformer" name="Opp Name" entity-id="Variable#1">
@@ -119,24 +49,21 @@
                     <property value="oppname" name="variableName"/>
                     <property value="#[payload.Name]" name="value"/>
                     <property value="http://www.mulesoft.org/schema/mule/core/set-variable" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property value="10" name="auxiliary;index"/>
+                    <property value="6" name="auxiliary;index"/>
                 </properties>
             </pattern>
             <pattern type="http://www.mulesoft.org/schema/mule/ee/tracking/custom-event" name="Opportunity Closed" entity-id="Custom Business event#1">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="Opportunity Closed" name="event-name"/>
-                    <property name="updated"/>
-                    <property value="11" name="auxiliary;index"/>
+                    <property value="7" name="auxiliary;index"/>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/ee/tracking/meta-data;0">
                         <property value="#[oppname]" name="value"/>
-                        <property value="true" name="isProcessed$$$$"/>
                         <property value="OpportunityName" name="key"/>
-                        <property value="12" name="auxiliary;index"/>
-                        <property value="12" name="auxiliary;wrapIn"/>
+                        <property value="8" name="auxiliary;index"/>
+                        <property value="8" name="auxiliary;wrapIn"/>
                     </property-collection>
                 </properties>
-                <description></description>
             </pattern>
             <pattern type="http://www.mulesoft.org/schema/mule/core/variable-transformer" name="Close Date" entity-id="Variable#2">
                 <graphicalData height="0" width="0" y="0" x="0"/>
@@ -144,7 +71,7 @@
                     <property value="closedate" name="variableName"/>
                     <property value="#[payload.CloseDate]" name="value"/>
                     <property value="http://www.mulesoft.org/schema/mule/core/set-variable" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property value="13" name="auxiliary;index"/>
+                    <property value="9" name="auxiliary;index"/>
                 </properties>
             </pattern>
             <pattern type="http://www.mulesoft.org/schema/mule/core/variable-transformer" name="Opportunity Id" entity-id="Variable#3">
@@ -153,10 +80,10 @@
                     <property value="oppid" name="variableName"/>
                     <property value="#[payload.Id]" name="value"/>
                     <property value="http://www.mulesoft.org/schema/mule/core/set-variable" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property value="14" name="auxiliary;index"/>
+                    <property value="10" name="auxiliary;index"/>
                 </properties>
             </pattern>
-            <pattern type="http://www.mulesoft.org/schema/mule/sfdc/sfdc-connector" name="GetLineItems" entity-id="Salesforce#2">
+            <pattern type="http://www.mulesoft.org/schema/mule/sfdc/sfdc-connector" name="GetLineItems" entity-id="Salesforce#1">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property name=""/>
@@ -171,7 +98,7 @@
                     <property name="username"/>
                     <property value="${sfdc.access.token.id}" name="accessTokenId"/>
                     <property value="Salesforce__OAuth_" name="config-ref"/>
-                    <property value="15" name="auxiliary;index"/>
+                    <property value="11" name="auxiliary;index"/>
                     <property name="proxyPassword"/>
                 </properties>
             </pattern>
@@ -184,11 +111,10 @@
                     <property value="http://www.mulesoft.org/schema/mule/ee/data-mapper/transform" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
                     <property name="pipeSize"/>
                     <property value="opp2sfdc_grf" name="config-ref"/>
-                    <property value="16" name="auxiliary;index"/>
+                    <property value="12" name="auxiliary;index"/>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/ee/data-mapper/input-arguments;0">
-                        <property value="true" name="isProcessed$$$$"/>
-                        <property value="17" name="auxiliary;index"/>
-                        <property value="17" name="auxiliary;wrapIn"/>
+                        <property value="13" name="auxiliary;index"/>
+                        <property value="13" name="auxiliary;wrapIn"/>
                     </property-collection>
                 </properties>
             </pattern>
@@ -196,20 +122,18 @@
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property name="script-ref"/>
-                    <property value="18" name="auxiliary;index"/>
-                    <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script;0">
-                        <property value="import com.netsuite.webservices.platform.core_2013_1.RecordRef&#xA;import com.netsuite.webservices.platform.core_2013_1.types.RecordType&#xA;import java.util.GregorianCalendar;&#xA;import javax.xml.datatype.DatatypeFactory;&#xA;import javax.xml.datatype.XMLGregorianCalendar;&#xA;import com.netsuite.webservices.transactions.sales_2013_1.types.SalesOrderOrderStatus;&#xA;&#xA;GregorianCalendar gcal = (GregorianCalendar) GregorianCalendar.getInstance();&#xA;XMLGregorianCalendar xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);&#xA;&#xA;def recRef = new RecordRef()&#xA;recRef.setType(RecordType.CUSTOMER)&#xA;recRef.setExternalId('A00000008')&#xA;recRef.setInternalId('-5')&#xA;payload.setEntity(recRef)&#xA;payload.setTranDate(xgcal)&#xA;&#xA;def recRefForm = new RecordRef()&#xA;recRefForm.setName('Standard Sales Order')&#xA;recRefForm.setInternalId('68')&#xA;recRefForm.setType(RecordType.SALES_ORDER) &#xA;payload.setCustomForm(recRefForm)&#xA;&#xA;println payload.getItemList().getItem().first().getQuantity()&#xA;payload.setOrderStatus(SalesOrderOrderStatus.PENDING_APPROVAL)&#xA;&#xA;&#xA;return payload&#xA;" name="text"/>
-                        <property value="Groovy" name="engine"/>
-                        <property value="true" name="isProcessed$$$$"/>
-                        <property value="19" name="auxiliary;index"/>
-                        <property value="19" name="auxiliary;wrapIn"/>
-                    </property-collection>
+                    <property value="14" name="auxiliary;index"/>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script-for-properties;0">
                         <property value="import com.netsuite.webservices.platform.core_2013_1.RecordRef&#xA;import com.netsuite.webservices.platform.core_2013_1.types.RecordType&#xA;import java.util.GregorianCalendar;&#xA;import javax.xml.datatype.DatatypeFactory;&#xA;import javax.xml.datatype.XMLGregorianCalendar;&#xA;import com.netsuite.webservices.transactions.sales_2013_1.types.SalesOrderOrderStatus;&#xA;&#xA;GregorianCalendar gcal = (GregorianCalendar) GregorianCalendar.getInstance();&#xA;XMLGregorianCalendar xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);&#xA;&#xA;def recRef = new RecordRef()&#xA;recRef.setType(RecordType.CUSTOMER)&#xA;recRef.setExternalId('A00000008')&#xA;recRef.setInternalId('-5')&#xA;payload.setEntity(recRef)&#xA;payload.setTranDate(xgcal)&#xA;&#xA;def recRefForm = new RecordRef()&#xA;recRefForm.setName('Standard Sales Order')&#xA;recRefForm.setInternalId('68')&#xA;recRefForm.setType(RecordType.SALES_ORDER) &#xA;payload.setCustomForm(recRefForm)&#xA;&#xA;println payload.getItemList().getItem().first().getQuantity()&#xA;payload.setOrderStatus(SalesOrderOrderStatus.PENDING_APPROVAL)&#xA;&#xA;&#xA;return payload&#xA;" name="text"/>
                         <property value="Groovy" name="engine"/>
-                        <property value="true" name="isProcessed$$$$"/>
-                        <property value="19" name="auxiliary;index"/>
-                        <property value="19" name="auxiliary;wrapIn"/>
+                        <property value="15" name="auxiliary;index"/>
+                        <property value="15" name="auxiliary;wrapIn"/>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script;0">
+                        <property value="import com.netsuite.webservices.platform.core_2013_1.RecordRef&#xA;import com.netsuite.webservices.platform.core_2013_1.types.RecordType&#xA;import java.util.GregorianCalendar;&#xA;import javax.xml.datatype.DatatypeFactory;&#xA;import javax.xml.datatype.XMLGregorianCalendar;&#xA;import com.netsuite.webservices.transactions.sales_2013_1.types.SalesOrderOrderStatus;&#xA;&#xA;GregorianCalendar gcal = (GregorianCalendar) GregorianCalendar.getInstance();&#xA;XMLGregorianCalendar xgcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);&#xA;&#xA;def recRef = new RecordRef()&#xA;recRef.setType(RecordType.CUSTOMER)&#xA;recRef.setExternalId('A00000008')&#xA;recRef.setInternalId('-5')&#xA;payload.setEntity(recRef)&#xA;payload.setTranDate(xgcal)&#xA;&#xA;def recRefForm = new RecordRef()&#xA;recRefForm.setName('Standard Sales Order')&#xA;recRefForm.setInternalId('68')&#xA;recRefForm.setType(RecordType.SALES_ORDER) &#xA;payload.setCustomForm(recRefForm)&#xA;&#xA;println payload.getItemList().getItem().first().getQuantity()&#xA;payload.setOrderStatus(SalesOrderOrderStatus.PENDING_APPROVAL)&#xA;&#xA;&#xA;return payload&#xA;" name="text"/>
+                        <property value="Groovy" name="engine"/>
+                        <property value="15" name="auxiliary;index"/>
+                        <property value="15" name="auxiliary;wrapIn"/>
                     </property-collection>
                 </properties>
             </pattern>
@@ -226,13 +150,12 @@
                     <property name="password"/>
                     <property value="Netsuite" name="config-ref"/>
                     <property name="endpoint"/>
-                    <property value="20" name="auxiliary;index"/>
+                    <property value="16" name="auxiliary;index"/>
                     <property name="roleId"/>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/netsuite/add-record-objects-recordss;0">
                         <property value="#[[payload]]" name="ref"/>
-                        <property value="true" name="isProcessed$$$$"/>
-                        <property value="21" name="auxiliary;index"/>
-                        <property value="21" name="auxiliary;wrapIn"/>
+                        <property value="17" name="auxiliary;index"/>
+                        <property value="17" name="auxiliary;wrapIn"/>
                     </property-collection>
                 </properties>
             </pattern>
@@ -245,17 +168,15 @@
                     <property value="http://www.mulesoft.org/schema/mule/ee/data-mapper/transform" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
                     <property name="pipeSize"/>
                     <property value="so2opp_grf" name="config-ref"/>
-                    <property value="22" name="auxiliary;index"/>
+                    <property value="18" name="auxiliary;index"/>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/ee/data-mapper/input-arguments;0">
-                        <property value="true" name="isProcessed$$$$"/>
-                        <property value="23" name="auxiliary;index"/>
-                        <property value="23" name="auxiliary;wrapIn"/>
+                        <property value="19" name="auxiliary;index"/>
+                        <property value="19" name="auxiliary;wrapIn"/>
                         <property-collection name="@http://www.mulesoft.org/schema/mule/ee/data-mapper/input-argument;1">
                             <property value="#[oppid]" name="value"/>
-                            <property value="true" name="isProcessed$$$$"/>
                             <property value="oppid" name="key"/>
-                            <property value="24" name="auxiliary;index"/>
-                            <property value="24" name="auxiliary;wrapIn"/>
+                            <property value="20" name="auxiliary;index"/>
+                            <property value="20" name="auxiliary;wrapIn"/>
                         </property-collection>
                     </property-collection>
                 </properties>
@@ -264,19 +185,16 @@
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property value="Sales Order Created" name="event-name"/>
-                    <property name="updated"/>
-                    <property value="25" name="auxiliary;index"/>
+                    <property value="21" name="auxiliary;index"/>
                     <property-collection name="@http://www.mulesoft.org/schema/mule/ee/tracking/meta-data;0">
                         <property value="#[payload.SalesOrderNS__c]" name="value"/>
-                        <property value="true" name="isProcessed$$$$"/>
                         <property value="SalesOrderNumber" name="key"/>
-                        <property value="26" name="auxiliary;index"/>
-                        <property value="26" name="auxiliary;wrapIn"/>
+                        <property value="22" name="auxiliary;index"/>
+                        <property value="22" name="auxiliary;wrapIn"/>
                     </property-collection>
                 </properties>
-                <description></description>
             </pattern>
-            <pattern type="http://www.mulesoft.org/schema/mule/sfdc/sfdc-connector" name="Update Opportunity" entity-id="Salesforce#3">
+            <pattern type="http://www.mulesoft.org/schema/mule/sfdc/sfdc-connector" name="Update Opportunity" entity-id="Salesforce#2">
                 <graphicalData height="0" width="0" y="0" x="0"/>
                 <properties>
                     <property name=""/>
@@ -291,7 +209,7 @@
                     <property name="username"/>
                     <property value="${sfdc.access.token.id}" name="accessTokenId"/>
                     <property value="Salesforce__OAuth_" name="config-ref"/>
-                    <property value="27" name="auxiliary;index"/>
+                    <property value="23" name="auxiliary;index"/>
                     <property name="proxyPassword"/>
                 </properties>
             </pattern>

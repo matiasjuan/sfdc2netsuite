@@ -3,24 +3,24 @@
     <global-element type="http://www.mulesoft.org/schema/mule/ee/data-mapper/config" name="DataMapper" entity-id="DataMapper#1">
         <properties>
             <property value="so2case_grf" name="name"/>
-            <property value="1" name="auxiliary;index"/>
             <property value="so2case.grf" name="transformationGraphPath"/>
+            <property value="1" name="auxiliary;index"/>
         </properties>
     </global-element>
     <global-element type="http://www.mulesoft.org/schema/mule/ee/data-mapper/config" name="DataMapper" entity-id="DataMapper#2">
         <properties>
             <property value="so2itemfulfillment_grf" name="name"/>
-            <property value="2" name="auxiliary;index"/>
             <property value="so2itemfulfillment.grf" name="transformationGraphPath"/>
+            <property value="2" name="auxiliary;index"/>
         </properties>
     </global-element>
-    <flow SubFlow="false" name="check.for.approved.so" entity-id="cf052252-e317-461f-b01c-264821c0f89d">
+    <flow SubFlow="false" name="check.for.approved.so" entity-id="8f34840f-aace-411a-b7b8-15d2bb1d807c">
         <properties>
             <property name="processingStrategy"/>
             <property name="processingStrategy2"/>
             <property name="bussinessEventsLabel"/>
-            <property name="tracking:enable-default-events"/>
             <property value="3" name="auxiliary;index"/>
+            <property name="tracking:enable-default-events"/>
         </properties>
         <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#1">
             <graphicalData height="0" width="0" y="0" x="0"/>
@@ -36,27 +36,22 @@
                             <graphicalData height="0" width="0" y="0" x="0"/>
                             <properties>
 <property value="anyOf(type, [_salesOrder]), anyOf(status,[_salesOrderPendingFulfillment])" name="expression"/>
-<property value="" name=""/>
-<property value="true" name="auxiliary;erased;pageSize"/>
+<property name=""/>
 <property value="http://www.mulesoft.org/schema/mule/netsuite/find-records" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-<property value="" name="pageSize"/>
-<property value="" name="receiveTimeout"/>
+<property name="pageSize"/>
+<property name="receiveTimeout"/>
 <property value="false" name="returnSearchColumns"/>
-<property value="" name="password"/>
-<property value="" name="endpoint"/>
+<property name="password"/>
+<property name="endpoint"/>
 <property value="false" name="bodyFieldsOnly"/>
-<property value="true" name="auxiliary;erased;receiveTimeout"/>
-<property value="" name="connectionTimeout"/>
-<property name="updated"/>
-<property value="" name="email"/>
-<property value="" name="account"/>
-<property value="true" name="auxiliary;erased;connectionTimeout"/>
+<property name="connectionTimeout"/>
+<property name="email"/>
+<property name="account"/>
 <property value="TRANSACTION" name="recordType"/>
 <property value="Netsuite" name="config-ref"/>
 <property value="5" name="auxiliary;index"/>
-<property value="" name="roleId"/>
+<property name="roleId"/>
                             </properties>
-                            <description></description>
                         </pattern>
                     </lane>
                 </compartment>
@@ -76,11 +71,11 @@
                             <graphicalData height="0" width="0" y="0" x="0"/>
                             <properties>
 <property name="returnClass"/>
-<property name="stream"/>
 <property name="input-ref"/>
+<property name="stream"/>
 <property value="http://www.mulesoft.org/schema/mule/ee/data-mapper/transform" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-<property name="pipeSize"/>
 <property value="so2case_grf" name="config-ref"/>
+<property name="pipeSize"/>
 <property value="7" name="auxiliary;index"/>
                             </properties>
                         </pattern>
@@ -96,30 +91,28 @@
                         <pattern type="http://www.mulesoft.org/schema/mule/sfdc/sfdc-connector" name="Generate Case" entity-id="Salesforce#1">
                             <graphicalData height="0" width="0" y="0" x="0"/>
                             <properties>
-<property value="" name=""/>
-<property value="" name="proxyUsername"/>
-<property value="" name="securityToken"/>
-<property value="" name="proxyHost"/>
+<property name=""/>
+<property name="proxyUsername"/>
+<property name="securityToken"/>
+<property name="proxyHost"/>
 <property value="http://www.mulesoft.org/schema/mule/sfdc/upsert" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-<property value="80" name="proxyPort"/>
+<property name="proxyPort"/>
 <property value="Case" name="type"/>
-<property value="" name="password"/>
-<property value="" name="url"/>
-<property value="#[payload]" name="ref"/>
+<property name="password"/>
+<property name="url"/>
 <property value="SalesOrderNS__c" name="externalIdFieldName"/>
-<property value="" name="username"/>
-<property name="updated"/>
+<property name="username"/>
 <property value="${sfdc.access.token.id}" name="accessTokenId"/>
 <property value="Salesforce__OAuth_" name="config-ref"/>
 <property value="9" name="auxiliary;index"/>
-<property value="" name="proxyPassword"/>
-<property-collection name="@http://www.mulesoft.org/schema/mule/sfdc/upsert-objectss;1">
+<property name="proxyPassword"/>
+<property-collection name="@http://www.mulesoft.org/schema/mule/sfdc/upsert-objectss;0">
     <property value="#[payload]" name="ref"/>
     <property value="true" name="isProcessed$$$$"/>
+    <property value="10" name="auxiliary;wrapIn"/>
     <property value="10" name="auxiliary;index"/>
 </property-collection>
                             </properties>
-                            <description></description>
                         </pattern>
                         <pattern type="http://www.mulesoft.org/schema/mule/core/logger" name="Logger" entity-id="Logger#2">
                             <graphicalData height="0" width="0" y="0" x="0"/>
@@ -135,154 +128,115 @@
             </scope>
         </lane>
     </flow>
-    <flow SubFlow="false" name="fullfillmentFlow2" entity-id="f2f5e23e-c738-4d63-a2ab-b8db2eb51eba">
-        <properties>
-            <property name="processingStrategy"/>
-            <property name="processingStrategy2"/>
-            <property name="bussinessEventsLabel"/>
-            <property name="tracking:enable-default-events"/>
-            <property value="12" name="auxiliary;index"/>
-        </properties>
-        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#4">
-            <graphicalData height="0" width="0" y="0" x="0"/>
-            <endpoint message-exchange-pattern="OneWay" direction="Inbound" type="http://www.mulesoft.org/schema/mule/sfdc/endpoint" name="Get Closed Case" entity-id="Salesforce (Streaming)#1">
-                <graphicalData height="0" width="0" y="0" x="0"/>
-                <properties>
-                    <property value="/fullfillment" name="topic"/>
-                    <property name="updated"/>
-                    <property value="http://www.mulesoft.org/schema/mule/sfdc/subscribe-topic" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property value="Salesforce__OAuth_" name="config-ref"/>
-                    <property value="13" name="auxiliary;index"/>
-                    <property value="one-way" name="exchange-pattern"/>
-                </properties>
-                <description></description>
-            </endpoint>
-            <pattern type="http://www.mulesoft.org/schema/mule/core/logger" name="Logger" entity-id="Logger#3">
-                <graphicalData height="0" width="0" y="0" x="0"/>
-                <properties>
-                    <property value="Case fullfilled #[payload]" name="message"/>
-                    <property name="category"/>
-                    <property value="INFO" name="level"/>
-                    <property value="14" name="auxiliary;index"/>
-                </properties>
-            </pattern>
-        </lane>
-    </flow>
-    <flow SubFlow="false" name="test.item.fulfillment" entity-id="44c6a7e3-6d9d-4a05-808d-3aeb45980631">
+    <flow SubFlow="false" name="fulfill.salesorder" entity-id="f8997c7e-f382-4036-b0c6-4b5a76f12e86">
         <properties>
             <property name="updated"/>
             <property value="" name="processingStrategy2"/>
             <property value="" name="bussinessEventsLabel"/>
-            <property value="15" name="auxiliary;index"/>
-            <property value="true" name="auxiliary;erased;processingStrategy2"/>
             <property value="false" name="tracking:enable-default-events"/>
-            <property-collection name="@http://www.mulesoft.org/schema/mule/ee/tracking/transaction;304101237">
+            <property value="true" name="auxiliary;erased;processingStrategy2"/>
+            <property value="12" name="auxiliary;index"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/ee/tracking/transaction;94109302">
                 <property value="true" name="isProcessed$$$$"/>
             </property-collection>
         </properties>
         <description></description>
-        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#5">
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#4">
             <graphicalData height="0" width="0" y="0" x="0"/>
-            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTP" entity-id="HTTP#1">
-                <graphicalData height="0" width="0" y="0" x="0"/>
+            <endpoint message-exchange-pattern="OneWay" direction="Inbound" type="http://www.mulesoft.org/schema/mule/sfdc/endpoint" name="Get Closed Case" entity-id="Salesforce (Streaming)#1">
+                <graphicalData height="67" width="101" y="554" x="19"/>
                 <properties>
-                    <property value="${http.port}" name="port"/>
-                    <property value="localhost" name="host"/>
-                    <property name="businessEventsLabel"/>
-                    <property name="followRedirects"/>
-                    <property value="http://www.mulesoft.org/schema/mule/http/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property name="keep-alive"/>
-                    <property name="contentType"/>
-                    <property name="disableTransportTransformer"/>
-                    <property name="password"/>
-                    <property value="request-response" name="exchange-pattern"/>
-                    <property name="tracking:enable-default-events"/>
-                    <property name="ref"/>
-                    <property name="transformer-refs"/>
-                    <property name="httpLabel"/>
-                    <property name="address"/>
-                    <property value="updatestatus" name="path"/>
-                    <property name="encoding"/>
-                    <property name="responseTransformer-refs"/>
-                    <property name="method"/>
-                    <property name="user"/>
-                    <property name="responseTimeout"/>
-                    <property name="mimeType"/>
-                    <property value="16" name="auxiliary;index"/>
-                    <property name="connector-ref"/>
+                    <property value="/fullfillment" name="topic"/>
+                    <property value="http://www.mulesoft.org/schema/mule/sfdc/subscribe-topic" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property value="Salesforce__OAuth_" name="config-ref"/>
+                    <property value="one-way" name="exchange-pattern"/>
+                    <property value="13" name="auxiliary;index"/>
                 </properties>
             </endpoint>
-            <pattern type="http://www.mulesoft.org/schema/mule/netsuite/netsuite-connector" name="Netsuite" entity-id="Netsuite#2">
-                <graphicalData height="0" width="0" y="0" x="0"/>
+            <pattern type="http://www.mulesoft.org/schema/mule/core/variable-transformer" name="Sales Order Number" entity-id="fa07d9d2-07ee-4e5e-92e8-73ba83853009">
+                <graphicalData height="67" width="122" y="554" x="180"/>
                 <properties>
-                    <property name=""/>
-                    <property name="idType"/>
+                    <property value="salesorder" name="variableName"/>
+                    <property name="updated"/>
+                    <property value="#[payload.SalesOrderNS__c]" name="value"/>
+                    <property value="http://www.mulesoft.org/schema/mule/core/set-variable" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                </properties>
+                <description></description>
+            </pattern>
+            <pattern type="http://www.mulesoft.org/schema/mule/netsuite/netsuite-connector" name="Get Sales Order" entity-id="Netsuite#2">
+                <graphicalData height="67" width="97" y="554" x="362"/>
+                <properties>
+                    <property value="" name=""/>
+                    <property value="INTERNAL" name="idType"/>
                     <property value="http://www.mulesoft.org/schema/mule/netsuite/get-record" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property name="receiveTimeout"/>
-                    <property name="password"/>
-                    <property name="endpoint"/>
-                    <property value="9920" name="id"/>
-                    <property name="connectionTimeout"/>
-                    <property name="email"/>
-                    <property name="account"/>
+                    <property value="" name="receiveTimeout"/>
+                    <property value="" name="password"/>
+                    <property value="" name="endpoint"/>
+                    <property value="#[salesorder]" name="id"/>
+                    <property value="true" name="auxiliary;erased;receiveTimeout"/>
+                    <property value="" name="connectionTimeout"/>
+                    <property name="updated"/>
+                    <property value="" name="email"/>
+                    <property value="" name="account"/>
+                    <property value="true" name="auxiliary;erased;connectionTimeout"/>
                     <property value="SALES_ORDER" name="recordType"/>
                     <property value="Netsuite" name="config-ref"/>
-                    <property value="17" name="auxiliary;index"/>
-                    <property name="roleId"/>
+                    <property value="15" name="auxiliary;index"/>
+                    <property value="" name="roleId"/>
                 </properties>
+                <description></description>
             </pattern>
             <pattern type="http://www.mulesoft.org/schema/mule/ee/data-mapper/data-mapper-connector" name="DataMapper" entity-id="DataMapper#4">
-                <graphicalData height="0" width="0" y="0" x="0"/>
+                <graphicalData height="67" width="79" y="554" x="519"/>
                 <properties>
                     <property name="returnClass"/>
-                    <property name="stream"/>
                     <property name="input-ref"/>
+                    <property name="stream"/>
                     <property value="http://www.mulesoft.org/schema/mule/ee/data-mapper/transform" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property name="pipeSize"/>
                     <property value="so2itemfulfillment_grf" name="config-ref"/>
-                    <property value="18" name="auxiliary;index"/>
+                    <property name="pipeSize"/>
+                    <property value="16" name="auxiliary;index"/>
                 </properties>
             </pattern>
-            <pattern type="http://www.mulesoft.org/schema/mule/core/logger" name="Logger" entity-id="Logger#4">
-                <graphicalData height="0" width="0" y="0" x="0"/>
+            <pattern type="http://www.mulesoft.org/schema/mule/netsuite/netsuite-connector" name="Create Item FulFillment" entity-id="Netsuite#3">
+                <graphicalData height="67" width="138" y="554" x="658"/>
                 <properties>
-                    <property value="#[payload]" name="message"/>
-                    <property name="category"/>
-                    <property value="INFO" name="level"/>
-                    <property value="19" name="auxiliary;index"/>
-                </properties>
-            </pattern>
-            <pattern type="http://www.mulesoft.org/schema/mule/core/logger" name="Logger" entity-id="Logger#5">
-                <graphicalData height="0" width="0" y="0" x="0"/>
-                <properties>
-                    <property value="#[payload.itemList.getItem()]" name="message"/>
-                    <property name="category"/>
-                    <property value="INFO" name="level"/>
-                    <property value="20" name="auxiliary;index"/>
-                </properties>
-            </pattern>
-            <pattern type="http://www.mulesoft.org/schema/mule/netsuite/netsuite-connector" name="Netsuite" entity-id="Netsuite#3">
-                <graphicalData height="0" width="0" y="0" x="0"/>
-                <properties>
-                    <property name=""/>
-                    <property name="connectionTimeout"/>
-                    <property name="email"/>
+                    <property value="" name=""/>
                     <property value="http://www.mulesoft.org/schema/mule/netsuite/add-record-objects" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
-                    <property name="receiveTimeout"/>
-                    <property name="account"/>
+                    <property value="" name="receiveTimeout"/>
+                    <property value="" name="password"/>
+                    <property value="" name="endpoint"/>
+                    <property value="#[[payload]]" name="ref"/>
+                    <property value="true" name="auxiliary;erased;receiveTimeout"/>
+                    <property value="" name="connectionTimeout"/>
+                    <property name="updated"/>
+                    <property value="" name="email"/>
+                    <property value="" name="account"/>
+                    <property value="true" name="auxiliary;erased;connectionTimeout"/>
                     <property value="ITEM_FULFILLMENT" name="recordType"/>
-                    <property name="password"/>
                     <property value="Netsuite" name="config-ref"/>
-                    <property name="endpoint"/>
-                    <property value="21" name="auxiliary;index"/>
-                    <property name="roleId"/>
-                    <property-collection name="@http://www.mulesoft.org/schema/mule/netsuite/add-record-objects-recordss;0">
+                    <property value="17" name="auxiliary;index"/>
+                    <property value="" name="roleId"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/netsuite/add-record-objects-recordss;1">
                         <property value="#[[payload]]" name="ref"/>
                         <property value="true" name="isProcessed$$$$"/>
-                        <property value="22" name="auxiliary;index"/>
-                        <property value="22" name="auxiliary;wrapIn"/>
+                        <property value="18" name="auxiliary;index"/>
                     </property-collection>
                 </properties>
+                <description></description>
+            </pattern>
+            <pattern type="http://www.mulesoft.org/schema/mule/ee/tracking/custom-event" name="Sales Order Fulfilled" entity-id="ef044ede-fae6-4d38-8ce0-4c5d25e6a1d0">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="Sales Order Fulfilled" name="event-name"/>
+                    <property name="updated"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/ee/tracking/meta-data;1">
+                        <property value="#[salesorder]" name="value"/>
+                        <property value="true" name="isProcessed$$$$"/>
+                        <property value="SalesOrderNumber" name="key"/>
+                    </property-collection>
+                </properties>
+                <description></description>
             </pattern>
         </lane>
     </flow>
