@@ -32,33 +32,18 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
          
         
     </flow>
-    <flow name="fullfillmentFlow2" doc:name="fullfillmentFlow2">
+    <flow name="fulfill.salesorder" doc:name="fulfill.salesorder">
         <sfdc:subscribe-topic config-ref="Salesforce__OAuth_" topic="/fullfillment" doc:name="Get Closed Case"/>
-        <logger message="Case fullfilled #[payload]" level="INFO" doc:name="Logger"/>
-        <!-- 
-        <netsuite:update-record config-ref="Netsuite" id="#[payload.SalesOrderNS__c]" recordType="SALES_ORDER" doc:name="Netsuite">
-            <netsuite:attributes>
-                <netsuite:attribute key="Status">_salesOrderPendingBilling</netsuite:attribute>
-            </netsuite:attributes>
-        </netsuite:update-record>
-         -->
-    </flow>
-    <flow name="test.item.fulfillment" doc:name="test.item.fulfillment">
-        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="${http.port}" path="updatestatus" doc:name="HTTP"/>
-        <netsuite:get-record config-ref="Netsuite" id="9920" recordType="SALES_ORDER" doc:name="Netsuite"/>
+        <set-variable variableName="salesorder" value="#[payload.SalesOrderNS__c]" doc:name="Sales Order Number"/>
+        <netsuite:get-record config-ref="Netsuite" id="#[salesorder]" recordType="SALES_ORDER" doc:name="Get Sales Order"/>
         <data-mapper:transform config-ref="so2itemfulfillment_grf" doc:name="DataMapper"/>
-        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
-        <logger message="#[payload.itemList.getItem()]" level="INFO" doc:name="Logger"/>
-        <netsuite:add-record-objects config-ref="Netsuite"  recordType="ITEM_FULFILLMENT" doc:name="Netsuite">
+        
+        <netsuite:add-record-objects config-ref="Netsuite"  recordType="ITEM_FULFILLMENT" doc:name="Create Item FulFillment">
             <netsuite:records ref="#[[payload]]"/>
         </netsuite:add-record-objects>
-        
-        <!-- 
-        <netsuite:update-record config-ref="Netsuite" id="11146" recordType="SALES_ORDER" doc:name="Netsuite">
-            <netsuite:attributes>
-                <netsuite:attribute key="orderStatus">#[com.netsuite.webservices.transactions.sales_2013_1.types.SalesOrderOrderStatus.PARTIALLY_FULFILLED]</netsuite:attribute>
-            </netsuite:attributes>
-        </netsuite:update-record>
-         -->
+        <tracking:custom-event event-name="Sales Order Fulfilled" doc:name="Sales Order Fulfilled">
+            <tracking:meta-data key="SalesOrderNumber" value="#[salesorder]"/>
+        </tracking:custom-event>
     </flow>
+    
 </mule>

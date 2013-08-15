@@ -20,14 +20,8 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 		transformationGraphPath="opp2sfdc.grf" doc:name="DataMapper" />
     <data-mapper:config name="so2opp_grf" transformationGraphPath="so2opp.grf" doc:name="DataMapper"/>
 	
-	<flow name="check.topics" doc:name="check.topics">
-		<http:inbound-endpoint exchange-pattern="request-response"
-			host="localhost" port="${http.port}" path="checktopics" doc:name="HTTP" />
-		<sfdc:query config-ref="Salesforce__OAuth_" query="select Name from PushTopic"
-			accessTokenId="${sfdc.access.token.id}" doc:name="Salesforce" />
-		<object-to-string-transformer doc:name="Object to String" />
-	</flow>
-	<flow name="main.flow" doc:name="main.flow">
+	
+	<flow name="process.opportunity" doc:name="process.opportunity">
 		<sfdc:subscribe-topic config-ref="Salesforce__OAuth_"
 			topic="/opp3" doc:name="Salesforce (Streaming)" />
 		<logger message="subscription received #[payload]" level="INFO"
@@ -94,23 +88,5 @@ return payload
         <sfdc:update-single config-ref="Salesforce__OAuth_" accessTokenId="${sfdc.access.token.id}" type="Opportunity" doc:name="Update Opportunity"/>
 
 	</flow>
-	<!-- 
-	<flow name="test.netsuite" doc:name="test.netsuite">
-		<http:inbound-endpoint exchange-pattern="request-response"
-			host="localhost" port="${http.port}" path="netsuite" doc:name="HTTP" />
-		<set-payload value="#[[['Quantity':1]]]" doc:name="Set Payload" />
 
-		<data-mapper:transform config-ref="opp2sfdc_grf"
-			doc:name="DataMapper">
-			<data-mapper:input-arguments>
-			</data-mapper:input-arguments>
-		</data-mapper:transform>
-
-		<netsuite:add-record-objects config-ref="Netsuite"
-			recordType="SALES_ORDER" doc:name="Netsuite">
-			<netsuite:records ref="#[[payload]]" />
-		</netsuite:add-record-objects>
-		<object-to-string-transformer doc:name="Object to String" />
-	</flow>
-	 -->
 </mule>

@@ -53,21 +53,4 @@ http://www.mulesoft.org/schema/mule/objectstore http://www.mulesoft.org/schema/m
 		</catch-exception-strategy>
 	</flow>
 
-	<flow name="setup.opp.topic" doc:name="setup.opp.topic">
-		<http:inbound-endpoint exchange-pattern="request-response"
-			host="localhost" port="${http.port}" path="setupopptopic" doc:name="HTTP" />
-		<sfdc:publish-topic config-ref="Salesforce__OAuth_"
-			topicName="opp3"
-			query="select Id, Name,IsWon, OwnerId, TotalOpportunityQuantity, CloseDate  from Opportunity where IsWon=true"
-			accessTokenId="${sfdc.access.token.id}" doc:name="Salesforce" />
-	</flow>
-	<flow name="setup.fullfillment.topic" doc:name="setup.fullfillment.topic">
-		<http:inbound-endpoint exchange-pattern="request-response"
-			host="localhost" port="${http.port}" path="setupfullfillmenttopic"
-			doc:name="HTTP" />
-		<sfdc:publish-topic config-ref="Salesforce__OAuth_"
-			topicName="fullfillment" query="select Id, SalesOrderNS__c from Case where IsClosed=true"
-			accessTokenId="${sfdc.access.token.id}" doc:name="Salesforce" />
-	</flow>
-
 </mule>
