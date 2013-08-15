@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns:netsuite="http://www.mulesoft.org/schema/mule/netsuite" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/netsuite http://www.mulesoft.org/schema/mule/netsuite/3.0/mule-netsuite.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
+http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/5.0/mule-sfdc.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <data-mapper:config name="so2case_grf" transformationGraphPath="so2case.grf" doc:name="DataMapper"/>
+    <data-mapper:config name="so2itemfulfillment_grf" transformationGraphPath="so2itemfulfillment.grf" doc:name="DataMapper"/>
+    <flow name="check.for.approved.so" doc:name="check.for.approved.so">
+        <!-- <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="${http.port}" path="getso" doc:name="HTTP"/> -->
+         
+        <poll frequency="10000" doc:name="Poll">
+            <netsuite:find-records config-ref="Netsuite" recordType="TRANSACTION" expression="anyOf(type, [_salesOrder]), anyOf(status,[_salesOrderPendingFulfillment])" returnSearchColumns="false" doc:name="Query Sales Order" bodyFieldsOnly="false"/>
+        </poll>
+         
+        
+        
+        <foreach doc:name="For Each">
+         
+         <!-- <expression-transformer expression="#[payload[3]]" doc:name="Expression"/> -->
+        	<data-mapper:transform config-ref="so2case_grf" doc:name="DataMapper"/>
+            <logger message="After DataMapper #[payload]" level="INFO" doc:name="Logger"/>
+        	<sfdc:upsert config-ref="Salesforce__OAuth_" externalIdFieldName="SalesOrderNS__c" type="Case" accessTokenId="${sfdc.access.token.id}" doc:name="Generate Case">
+            	<sfdc:objects ref="#[payload]"/>
+        	</sfdc:upsert>
+            <logger message="Result from SFDC #[payload]" level="INFO" doc:name="Logger"/>
+          
+        </foreach>
+         
+        
+    </flow>
+    <flow name="fullfillmentFlow2" doc:name="fullfillmentFlow2">
+        <sfdc:subscribe-topic config-ref="Salesforce__OAuth_" topic="/fullfillment" doc:name="Get Closed Case"/>
+        <logger message="Case fullfilled #[payload]" level="INFO" doc:name="Logger"/>
+        <!-- 
+        <netsuite:update-record config-ref="Netsuite" id="#[payload.SalesOrderNS__c]" recordType="SALES_ORDER" doc:name="Netsuite">
+            <netsuite:attributes>
+                <netsuite:attribute key="Status">_salesOrderPendingBilling</netsuite:attribute>
+            </netsuite:attributes>
+        </netsuite:update-record>
+         -->
+    </flow>
+    <flow name="test.item.fulfillment" doc:name="test.item.fulfillment">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="${http.port}" path="updatestatus" doc:name="HTTP"/>
+        <netsuite:get-record config-ref="Netsuite" id="9920" recordType="SALES_ORDER" doc:name="Netsuite"/>
+        <data-mapper:transform config-ref="so2itemfulfillment_grf" doc:name="DataMapper"/>
+        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+        <logger message="#[payload.itemList.getItem()]" level="INFO" doc:name="Logger"/>
+        <netsuite:add-record-objects config-ref="Netsuite"  recordType="ITEM_FULFILLMENT" doc:name="Netsuite">
+            <netsuite:records ref="#[[payload]]"/>
+        </netsuite:add-record-objects>
+        
+        <!-- 
+        <netsuite:update-record config-ref="Netsuite" id="11146" recordType="SALES_ORDER" doc:name="Netsuite">
+            <netsuite:attributes>
+                <netsuite:attribute key="orderStatus">#[com.netsuite.webservices.transactions.sales_2013_1.types.SalesOrderOrderStatus.PARTIALLY_FULFILLED]</netsuite:attribute>
+            </netsuite:attributes>
+        </netsuite:update-record>
+         -->
+    </flow>
+</mule>
