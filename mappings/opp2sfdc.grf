@@ -516,10 +516,10 @@
 <Node enabled="enabled" fileURL="dict:inputPayload" guiHeight="0" guiName="Map&lt;k,v&gt; READER" guiWidth="0" guiX="20" guiY="20" id="BEAN_READER0" type="BEAN_READER">
 <attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Context xpath=".">
-  <Context outPort="0" sequenceField="__id" xpath=".">
+  <Context outPort="1" sequenceField="__id" xpath=".">
     <Mapping cloverField="Quantity" trim="true" xpath="Quantity"/>
   </Context>
-  <Context outPort="1" sequenceField="__id" xpath=".">
+  <Context outPort="0" sequenceField="__id" xpath=".">
     <Mapping cloverField="Quantity" trim="true" xpath="Quantity"/>
   </Context>
 </Context>
@@ -1386,7 +1386,7 @@ output.__parent_id = input.__id;
 output.quantity = input.Quantity;
 output.type_5 = 'INVENTORY_ITEM';
 output.internalId_5 = '55';
-output.amount = 100;;]]></attr>
+output.amount = 100;]]></attr>
 </Node>
 <Edge debugMode="true" fromNode="BEAN_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="485c3bde-a01a-4563-8d1c-27b949e3565c" outPort="Port 0 (out)" toNode="REFORMAT0:0"/>
 <Edge debugMode="true" fromNode="BEAN_READER0:1" guiBendpoints="" id="Edge2" inPort="Port 0 (in)" metadata="485c3bde-a01a-4563-8d1c-27b949e3565c" outPort="Port 1 (out)" toNode="REFORMAT1:0"/>

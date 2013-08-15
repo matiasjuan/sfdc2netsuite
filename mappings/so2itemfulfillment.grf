@@ -2119,8 +2119,9 @@
 output.__id = input.__id;
 //END -> DO NOT REMOVE
 
-output.type = 'SALES_ORDER';
-output.internalId = input.internalId_15;]]></attr>
+
+output.internalId = input.internalId_15;
+output.type = 'SALES_ORDER';]]></attr>
 </Node>
 <Node enabled="enabled" guiHeight="0" guiName="Foreach 'item' -&gt; 'item'" guiWidth="0" guiX="460" guiY="220" id="REFORMAT2" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
 <attr name="melScript"><![CDATA[//MEL
@@ -2129,8 +2130,7 @@ output.__id = input.__id;
 output.__parent_id = input.__parent_id;
 //END -> DO NOT REMOVE
 output.itemIsFulfilled = true;
-output.internalId_1 = input.internalId_5;
-output.quantity = input.quantity;]]></attr>
+output.orderLine = input.line;]]></attr>
 </Node>
 <Edge debugMode="true" fromNode="BEAN_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="f6365fd7-ab54-4165-aba0-45bd5190c856" outPort="Port 0 (out)" toNode="REFORMAT0:0"/>
 <Edge debugMode="true" fromNode="BEAN_READER0:1" guiBendpoints="" id="Edge4" inPort="Port 0 (in)" metadata="ca58953f-f530-4b2b-8521-fb35f173e272" outPort="Port 1 (out)" toNode="REFORMAT2:0"/>
