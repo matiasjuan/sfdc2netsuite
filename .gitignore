@@ -1,0 +1,4 @@
+.studio/*
+src/main/app/local.properties
+.mule/*
+target/*

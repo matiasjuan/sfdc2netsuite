@@ -6,7 +6,7 @@
 	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc"
 	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.0"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.2"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
@@ -18,11 +18,11 @@ http://www.mulesoft.org/schema/mule/netsuite http://www.mulesoft.org/schema/mule
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 	<data-mapper:config name="opp2sfdc_grf"
 		transformationGraphPath="opp2sfdc.grf" doc:name="DataMapper" />
-    <data-mapper:config name="so2opp_grf" transformationGraphPath="so2opp.grf" doc:name="DataMapper"/>
+    <data-mapper:config name="list_writeresponse__to_list_writeresponse_" transformationGraphPath="list_writeresponse__to_list_writeresponse_.grf" doc:name="list_writeresponse__to_list_writeresponse_"/>
 	
 	
 	<flow name="process.opportunity" doc:name="process.opportunity">
-		<sfdc:subscribe-topic config-ref="Salesforce__OAuth_"
+		<sfdc:subscribe-topic config-ref="Salesforce"
 			topic="/opp3" doc:name="Salesforce (Streaming)" />
 		<logger message="subscription received #[payload]" level="INFO"
 			doc:name="Logger" />
@@ -34,7 +34,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 		<set-variable value="#[payload.CloseDate]" variableName="closedate"
 			doc:name="Close Date" />
 		<set-variable value="#[payload.Id]" variableName="oppid" doc:name="Opportunity Id" />
-		<sfdc:query config-ref="Salesforce__OAuth_"
+		<sfdc:query config-ref="Salesforce"
 			query="select UnitPrice, Quantity from OpportunityLineItem where OpportunityId = '#[oppid]'"
 			accessTokenId="${sfdc.access.token.id}" doc:name="GetLineItems" />
 		<data-mapper:transform config-ref="opp2sfdc_grf"
@@ -73,19 +73,23 @@ payload.setOrderStatus(SalesOrderOrderStatus.PENDING_APPROVAL)
 return payload
 ]]></scripting:script>
 		</scripting:component>
+<!-- 		<netsuite:add-record-objects config-ref="Netsuite" -->
+<!-- 			recordType="SALES_ORDER" doc:name="Create Sales Order"> -->
+<!-- 			<netsuite:records ref="#[[payload]]" /> -->
+<!-- 		</netsuite:add-record-objects> -->
 		<netsuite:add-record-objects config-ref="Netsuite"
-			recordType="SALES_ORDER" doc:name="Create Sales Order">
+			doc:name="Create Sales Order">
 			<netsuite:records ref="#[[payload]]" />
 		</netsuite:add-record-objects>
-        <data-mapper:transform config-ref="so2opp_grf" doc:name="DataMapper">
-            <data-mapper:input-arguments>
-                <data-mapper:input-argument key="oppid">#[oppid]</data-mapper:input-argument>
-            </data-mapper:input-arguments>
-        </data-mapper:transform>
+        <set-payload value="#[ ['Id': oppid, 'SalesOrderNS__c': payload[0].baseRef.internalId] ]" doc:name="Set Payload"/>
         <tracking:custom-event event-name="Sales Order Created" doc:name="Sales Order Created">
-            <tracking:meta-data key="SalesOrderNumber" value="#[payload.SalesOrderNS__c]"/>
+            <tracking:meta-data key="SalesOrderNumber" value="#[payload['SalesOrderNS__c']]"/>
         </tracking:custom-event>
-        <sfdc:update-single config-ref="Salesforce__OAuth_" accessTokenId="${sfdc.access.token.id}" type="Opportunity" doc:name="Update Opportunity"/>
+        <logger message="sales order created #[payload]" level="INFO" doc:name="Logger"/>
+        <sfdc:update-single config-ref="Salesforce" accessTokenId="${sfdc.access.token.id}" type="Opportunity" doc:name="Update Opportunity">
+            <sfdc:object ref="#[payload]"/>
+        </sfdc:update-single>
+        <logger message="updated order in SFDC: #[payload]" level="INFO" doc:name="Logger"/>
 
 	</flow>
 

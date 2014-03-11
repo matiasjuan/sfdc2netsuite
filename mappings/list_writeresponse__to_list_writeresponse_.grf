@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><Graph author="matiasjuan" created="Thu Mar 06 02:14:02 ART 2014" description="List&lt;WriteResponse&gt; To List&lt;WriteResponse&gt;" guiVersion="3.4.3.P" id="1394083911049" licenseCode="Unlicensed" licenseType="Unknown" modified="Thu Mar 06 02:14:02 ART 2014" modifiedBy="matiasjuan" name="List_WriteResponse__To_List_WriteResponse_" revision="1.0" showComponentDetails="false">
+<Global>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/list" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _type="Input" id="c1ce4522-8b3d-43b1-91ad-9336af1c3ab4">
+<Record fieldDelimiter="," name="list" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/list/baseRef/name" containerType="SINGLE" label="name" name="name" type="string"/>
+<Field __index="1" __sourcePath="{}/list/status/isSuccess" containerType="SINGLE" label="isSuccess" name="isSuccess" type="boolean"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/list" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _type="Output" id="8523255c-53b9-4f84-ac0b-2c612df81f02">
+<Record fieldDelimiter="," name="list" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/list/baseRef/name" containerType="SINGLE" label="name" name="name" type="string"/>
+<Field __index="1" __sourcePath="{}/list/status/isSuccess" containerType="SINGLE" label="isSuccess" name="isSuccess" type="boolean"/>
+</Record>
+</Metadata>
+<Metadata __index="2" __referenceCounter="1" __sourcePath="{}/list/status/statusDetail" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="c1ce4522-8b3d-43b1-91ad-9336af1c3ab4" _parent_id="__parent_id" _type="Input" id="c64325e4-44c3-4bca-87be-d006492a6544">
+<Record fieldDelimiter="," name="statusDetail" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __index="2" __sourcePath="{}/list/status/statusDetail/code" containerType="SINGLE" label="code" name="code" type="string"/>
+<Field __index="3" __sourcePath="{}/list/status/statusDetail/message" containerType="SINGLE" label="message" name="message" type="string"/>
+<Field __index="4" __sourcePath="{}/list/status/statusDetail/type" containerType="SINGLE" label="type" name="type" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="2" __referenceCounter="1" __sourcePath="{}/list/status/statusDetail" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="8523255c-53b9-4f84-ac0b-2c612df81f02" _parent_id="__parent_id" _type="Output" id="228fb190-1297-492d-b717-a236f6bd067d">
+<Record fieldDelimiter="," name="statusDetail" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __index="2" __sourcePath="{}/list/status/statusDetail/code" containerType="SINGLE" label="code" name="code" type="string"/>
+<Field __index="3" __sourcePath="{}/list/status/statusDetail/message" containerType="SINGLE" label="message" name="message" type="string"/>
+<Field __index="4" __sourcePath="{}/list/status/statusDetail/type" containerType="SINGLE" label="type" name="type" type="string"/>
+</Record>
+</Metadata>
+<Dictionary>
+<Entry id="DictionaryEntry0" input="true" name="inputPayload" output="false" type="object"/>
+<Entry id="DictionaryEntry1" input="false" name="outputPayload" output="true" type="object"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node enabled="enabled" fileURL="dict:inputPayload" guiName="Pojo READER" guiX="20" guiY="20" id="BEAN_READER0" type="BEAN_READER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context outPort="0" sequenceField="__id" xpath=".">
+  <Mapping cloverField="name" trim="true" xpath="baseRef/name"/>
+  <Mapping cloverField="isSuccess" trim="true" xpath="status/isSuccess"/>
+  <Context generatedKey="__parent_id" outPort="1" parentKey="__id" sequenceField="__id" xpath="status/statusDetail">
+    <Mapping cloverField="code" trim="true" xpath="code"/>
+    <Mapping cloverField="message" trim="true" xpath="message"/>
+    <Mapping cloverField="type" trim="true" xpath="type"/>
+  </Context>
+</Context>
+]]></attr>
+<attr name="_data_format"><![CDATA[JAVA]]></attr>
+<attr name="schema"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><schema-object>
+  <schema-collection>
+    <typed-object-ref type-ref="com.netsuite.webservices.platform.messages_2013_1.WriteResponse"/>
+  </schema-collection>
+  <typed-object type="com.netsuite.webservices.platform.core_2013_1.BaseRef">
+    <typed-object-ref name="name" type-ref="java.lang.String"/>
+  </typed-object>
+  <typed-object type="com.netsuite.webservices.platform.faults_2013_1.types.StatusDetailType"/>
+  <typed-object type="java.lang.Boolean"/>
+  <typed-object type="com.netsuite.webservices.platform.core_2013_1.StatusDetail">
+    <typed-object-ref name="code" type-ref="java.lang.String"/>
+    <typed-object-ref name="message" type-ref="java.lang.String"/>
+    <typed-object-ref name="type" type-ref="com.netsuite.webservices.platform.faults_2013_1.types.StatusDetailType"/>
+  </typed-object>
+  <typed-object type="java.lang.String"/>
+  <typed-object type="com.netsuite.webservices.platform.messages_2013_1.WriteResponse">
+    <typed-object-ref name="baseRef" type-ref="com.netsuite.webservices.platform.core_2013_1.BaseRef"/>
+    <typed-object-ref name="status" type-ref="com.netsuite.webservices.platform.core_2013_1.Status"/>
+  </typed-object>
+  <typed-object type="com.netsuite.webservices.platform.core_2013_1.Status">
+    <typed-object-ref name="isSuccess" type-ref="java.lang.Boolean"/>
+    <schema-collection name="statusDetail" type="java.util.List">
+      <typed-object-ref type-ref="com.netsuite.webservices.platform.core_2013_1.StatusDetail"/>
+    </schema-collection>
+  </typed-object>
+</schema-object>
+]]></attr>
+<attr name="__metadata"><![CDATA[true]]></attr>
+</Node>
+<Node cacheInMemory="true" enabled="enabled" fileURL="dict:outputPayload" guiName="Pojo WRITER" guiX="900" guiY="20" id="BEAN_WRITER0" type="BEAN_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<clover:collection clover:name="list" xmlns:clover="http://www.cloveretl.com/ns/xmlmapping">
+  <item clover:inPort="0">
+    <baseRef>
+      <name>$0.name</name>
+    </baseRef>
+    <status>
+      <isSuccess>$0.isSuccess</isSuccess>
+      <clover:collection clover:name="statusDetail">
+        <item clover:inPort="1" clover:key="__parent_id" clover:parentKey="__id">
+          <code>$1.code</code>
+          <message>$1.message</message>
+          <type>$1.type</type>
+        </item>
+      </clover:collection>
+    </status>
+  </item>
+</clover:collection>]]></attr>
+<attr name="_data_format"><![CDATA[JAVA]]></attr>
+<attr name="schema"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><schema-object>
+  <schema-collection>
+    <typed-object-ref type-ref="com.netsuite.webservices.platform.messages_2013_1.WriteResponse"/>
+  </schema-collection>
+  <typed-object type="com.netsuite.webservices.platform.core_2013_1.BaseRef">
+    <typed-object-ref name="name" type-ref="java.lang.String"/>
+  </typed-object>
+  <typed-object type="com.netsuite.webservices.platform.faults_2013_1.types.StatusDetailType"/>
+  <typed-object type="java.lang.Boolean"/>
+  <typed-object type="com.netsuite.webservices.platform.core_2013_1.StatusDetail">
+    <typed-object-ref name="code" type-ref="java.lang.String"/>
+    <typed-object-ref name="message" type-ref="java.lang.String"/>
+    <typed-object-ref name="type" type-ref="com.netsuite.webservices.platform.faults_2013_1.types.StatusDetailType"/>
+  </typed-object>
+  <typed-object type="java.lang.String"/>
+  <typed-object type="com.netsuite.webservices.platform.messages_2013_1.WriteResponse">
+    <typed-object-ref name="baseRef" type-ref="com.netsuite.webservices.platform.core_2013_1.BaseRef"/>
+    <typed-object-ref name="status" type-ref="com.netsuite.webservices.platform.core_2013_1.Status"/>
+  </typed-object>
+  <typed-object type="com.netsuite.webservices.platform.core_2013_1.Status">
+    <typed-object-ref name="isSuccess" type-ref="java.lang.Boolean"/>
+    <schema-collection name="statusDetail" type="java.util.List">
+      <typed-object-ref type-ref="com.netsuite.webservices.platform.core_2013_1.StatusDetail"/>
+    </schema-collection>
+  </typed-object>
+</schema-object>
+]]></attr>
+<attr name="__metadata"><![CDATA[true]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'list' -&gt; 'list'" guiX="460" guiY="20" id="FOREACH_LIST_LIST" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+//END -> DO NOT REMOVE
+output.name = input.name;
+output.isSuccess = input.isSuccess;
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'statusDetail' -&gt; 'statusDetail'" guiX="460" guiY="120" id="FOREACH_STATUS_DETAIL_STATUS_DETAIL" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+output.__parent_id = input.__parent_id;
+//END -> DO NOT REMOVE
+output.code = input.code;
+output.message = input.message;
+output.type = input.type;
+]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="BEAN_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="c1ce4522-8b3d-43b1-91ad-9336af1c3ab4" outPort="Port 0 (out)" toNode="FOREACH_LIST_LIST:0"/>
+<Edge debugMode="true" fromNode="BEAN_READER0:1" guiBendpoints="" id="Edge2" inPort="Port 0 (in)" metadata="c64325e4-44c3-4bca-87be-d006492a6544" outPort="Port 1 (out)" toNode="FOREACH_STATUS_DETAIL_STATUS_DETAIL:0"/>
+<Edge debugMode="true" fromNode="FOREACH_LIST_LIST:0" guiBendpoints="" id="Edge1" inPort="Port 0 (in)" metadata="8523255c-53b9-4f84-ac0b-2c612df81f02" outPort="Port 0 (out)" toNode="BEAN_WRITER0:0"/>
+<Edge debugMode="true" fromNode="FOREACH_STATUS_DETAIL_STATUS_DETAIL:0" guiBendpoints="" id="Edge3" inPort="Port 1 (in)" metadata="228fb190-1297-492d-b717-a236f6bd067d" outPort="Port 0 (out)" toNode="BEAN_WRITER0:1"/>
+</Phase>
+</Graph>

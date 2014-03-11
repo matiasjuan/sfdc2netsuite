@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns:netsuite="http://www.mulesoft.org/schema/mule/netsuite" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns:netsuite="http://www.mulesoft.org/schema/mule/netsuite" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/netsuite http://www.mulesoft.org/schema/mule/netsuite/3.0/mule-netsuite.xsd
 http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
@@ -9,21 +9,24 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
     <data-mapper:config name="so2case_grf" transformationGraphPath="so2case.grf" doc:name="DataMapper"/>
     <data-mapper:config name="so2itemfulfillment_grf" transformationGraphPath="so2itemfulfillment.grf" doc:name="DataMapper"/>
+    <data-mapper:config name="map_to_pojo" transformationGraphPath="map_to_pojo.grf" doc:name="map_to_pojo"/>
     <flow name="check.for.approved.so" doc:name="check.for.approved.so">
         <!-- <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="${http.port}" path="getso" doc:name="HTTP"/> -->
          
         <poll frequency="10000" doc:name="Poll">
-            <netsuite:find-records config-ref="Netsuite" recordType="TRANSACTION" expression="anyOf(type, [_salesOrder]), anyOf(status,[_salesOrderPendingFulfillment])" returnSearchColumns="false" doc:name="Query Sales Order" bodyFieldsOnly="false"/>
+<!--             <netsuite:find-records config-ref="Netsuite" recordType="TRANSACTION"  -->
+<!--             expression="anyOf(type, [_salesOrder]), anyOf(status,[_salesOrderPendingFulfillment])"  -->
+<!--             returnSearchColumns="false" doc:name="Query Sales Order" bodyFieldsOnly="false"/> -->
+			<netsuite:search-with-expression config-ref="Netsuite" expression="anyOf(type, [_salesOrder]), anyOf(status,[_salesOrderPendingFulfillment])" 
+            	searchRecord="TRANSACTION" returnSearchColumns="false" bodyFieldsOnly="false" doc:name="Query Sales Order"/>
         </poll>
-         
         
-        
-        <foreach doc:name="For Each">
+	<foreach doc:name="For Each" collection="payload.recordList.record">
          
          <!-- <expression-transformer expression="#[payload[3]]" doc:name="Expression"/> -->
         	<data-mapper:transform config-ref="so2case_grf" doc:name="DataMapper"/>
             <logger message="After DataMapper #[payload]" level="INFO" doc:name="Logger"/>
-        	<sfdc:upsert config-ref="Salesforce__OAuth_" externalIdFieldName="SalesOrderNS__c" type="Case" accessTokenId="${sfdc.access.token.id}" doc:name="Generate Case">
+        	<sfdc:upsert config-ref="Salesforce" externalIdFieldName="SalesOrderNS__c" type="Case" accessTokenId="${sfdc.access.token.id}" doc:name="Generate Case">
             	<sfdc:objects ref="#[payload]"/>
         	</sfdc:upsert>
             <logger message="Result from SFDC #[payload]" level="INFO" doc:name="Logger"/>
@@ -33,14 +36,23 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
         
     </flow>
     <flow name="fulfill.salesorder" doc:name="fulfill.salesorder">
-        <sfdc:subscribe-topic config-ref="Salesforce__OAuth_" topic="/fullfillment" doc:name="Get Closed Case"/>
+        <sfdc:subscribe-topic config-ref="Salesforce" topic="/fullfillment" doc:name="Get Closed Case"/>
         <set-variable variableName="salesorder" value="#[payload.SalesOrderNS__c]" doc:name="Sales Order Number"/>
-        <netsuite:get-record config-ref="Netsuite" id="#[salesorder]" recordType="SALES_ORDER" doc:name="Get Sales Order"/>
-        <data-mapper:transform config-ref="so2itemfulfillment_grf" doc:name="DataMapper"/>
+<!--         <netsuite:get-record config-ref="Netsuite"  id="#[salesorder]" recordType="SALES_ORDER" doc:name="Get Sales Order"/> -->
+        <netsuite:get-record config-ref="Netsuite"   doc:name="Get Sales Order">
+            <netsuite:record-ref internalId="#[salesorder]" type="SALES_ORDER"/>
+        </netsuite:get-record>
+        <set-payload value="#[ ['internalId': payload.record.internalId] ]" doc:name="Set Payload"/>
+        <data-mapper:transform config-ref="map_to_pojo" doc:name="Map To Pojo"/>
+<!--         <data-mapper:transform config-ref="so2itemfulfillment_grf" doc:name="DataMapper"/>  -->
         
-        <netsuite:add-record-objects config-ref="Netsuite"  recordType="ITEM_FULFILLMENT" doc:name="Create Item FulFillment">
+<!--         <netsuite:add-record-objects config-ref="Netsuite" type="ITEM_FULFILLMENT"  doc:name="Create Item FulFillment"> -->
+<!--             <netsuite:records ref="#[[payload]]" /> -->
+<!--         </netsuite:add-record-objects> -->
+        <netsuite:add-record-objects config-ref="Netsuite"  doc:name="Create Item FulFillment" >
             <netsuite:records ref="#[[payload]]"/>
         </netsuite:add-record-objects>
+        <logger message="create item fulfillment result: #[payload]" level="INFO" doc:name="Logger"/>
         <tracking:custom-event event-name="Sales Order Fulfilled" doc:name="Sales Order Fulfilled">
             <tracking:meta-data key="SalesOrderNumber" value="#[salesorder]"/>
         </tracking:custom-event>

@@ -5,7 +5,7 @@
 	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.0"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.2"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/5.0/mule-sfdc.xsd
@@ -13,44 +13,50 @@ http://www.mulesoft.org/schema/mule/netsuite http://www.mulesoft.org/schema/mule
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd
-http://www.mulesoft.org/schema/mule/objectstore http://www.mulesoft.org/schema/mule/objectstore/1.0/mule-objectstore.xsd">
-	<context:property-placeholder location="mule.${mule.env}.properties" />
-	<https:connector name="httpscon" doc:name="HTTP\HTTPS">
-		<https:tls-key-store path="keystore" keyPassword="MuleSoft1"
-			storePassword="MuleSoft1" />
-	</https:connector>
-	<sfdc:config-with-oauth name="Salesforce__OAuth_"
-		consumerKey="${sfdc.consumer.key}" consumerSecret="${sfdc.consumer.secret}"
-		doc:name="Salesforce (OAuth)">
-		<sfdc:oauth-callback-config connector-ref="httpscon"
-			domain="${sfdc.callback.host}" localPort="8082" path="${sfdc.callback.path}" />
-		<sfdc:oauth-store-config objectStore-ref="_defaultInMemoryObjectStore"/>
-	</sfdc:config-with-oauth>
+http://www.mulesoft.org/schema/mule/objectstore http://www.mulesoft.org/schema/mule/objectstore/1.0/mule-objectstore.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd">
+
+<!-- 	<sfdc:config-with-oauth name="Salesforce__OAuth_" -->
+<!-- 		consumerKey="${sfdc.consumer.key}" consumerSecret="${sfdc.consumer.secret}" -->
+<!-- 		doc:name="Salesforce (OAuth)"> -->
+<!-- 		<sfdc:oauth-callback-config  -->
+<!-- 			domain="${sfdc.callback.host}" localPort="${http.port}" path="${sfdc.callback.path}" /> -->
+<!-- 		<sfdc:oauth-store-config objectStore-ref="_defaultInMemoryObjectStore"/> -->
+<!-- 	</sfdc:config-with-oauth> -->
+
 	<netsuite:config name="Netsuite" email="${ns.email}"
 		password="${ns.password}" account="${ns.account}" roleId="3" doc:name="Netsuite">
 		<netsuite:connection-pooling-profile
 			initialisationPolicy="INITIALISE_ONE" exhaustedAction="WHEN_EXHAUSTED_GROW" />
 	</netsuite:config>
+	
+    <sfdc:config name="Salesforce"
+    	username="${sfdc.username}" password="${sfdc.password}" securityToken="${sfdc.securityToken}"  
+		doc:name="Salesforce">
+        <sfdc:connection-pooling-profile initialisationPolicy="INITIALISE_ONE" exhaustedAction="WHEN_EXHAUSTED_GROW"/>
+    </sfdc:config>
 
-
-	<flow name="sfdc.auth" doc:name="sfdc.auth">
-		<http:inbound-endpoint exchange-pattern="request-response"
-			host="localhost" port="${http.port}" path="auth" doc:name="HTTP" />
-		<sfdc:authorize config-ref="Salesforce__OAuth_"
-			display="POPUP" authorizationUrl="https://login.salesforce.com/services/oauth2/authorize"
-			accessTokenUrl="https://login.salesforce.com/services/oauth2/token"
-			doc:name="Salesforce" />
-		<http:response-builder status="200"
-			doc:name="HTTP Response Builder">
-			<set-payload
-				value="You have successfully authorized the connector. You access token id is #[flowVars['OAuthAccessTokenId']]" />
-		</http:response-builder>
-		<catch-exception-strategy doc:name="Catch Exception Strategy">
-			<http:response-builder status="404"
-				doc:name="HTTP Response Builder">
-				<set-payload value="An error has occurred authorizing the connector" />
-			</http:response-builder>
-		</catch-exception-strategy>
-	</flow>
+<!-- 	<flow name="sfdc.auth" doc:name="sfdc.auth"> -->
+<!-- 		<http:inbound-endpoint exchange-pattern="request-response" -->
+<!-- 			host="localhost" port="${http.port}" path="auth" doc:name="HTTP" /> -->
+<!-- 		<sfdc:authorize config-ref="Salesforce" -->
+<!-- 			display="POPUP" authorizationUrl="https://login.salesforce.com/services/oauth2/authorize" -->
+<!-- 			accessTokenUrl="https://login.salesforce.com/services/oauth2/token" -->
+<!-- 			doc:name="Salesforce" /> -->
+<!-- 			<set-session-variable value="#[flowVars['OAuthAccessTokenId']]" variableName="OAuthAccessTokenId" doc:name="Session Variable"></set-session-variable> -->
+<!-- 		<http:response-builder status="200" -->
+<!-- 		contentType="text/plain" -->
+<!-- 			doc:name="HTTP Response Builder"> -->
+<!-- 			<set-payload -->
+<!-- 				value="You have successfully authorized the connector. You access token id is #[flowVars['OAuthAccessTokenId']]" /> -->
+<!-- 		</http:response-builder> -->
+<!-- 		<catch-exception-strategy doc:name="Catch Exception Strategy"> -->
+<!-- 			<http:response-builder status="404" -->
+<!-- 				contentType="text/plain" -->
+<!-- 				doc:name="HTTP Response Builder"> -->
+<!-- 				<set-payload value="An error has occurred authorizing the connector" /> -->
+<!-- 			</http:response-builder> -->
+<!-- 		</catch-exception-strategy> -->
+<!-- 	</flow> -->
 
 </mule>

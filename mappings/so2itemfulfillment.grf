@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Graph author="albin" created="Wed Aug 14 14:29:41 PDT 2013" guiVersion="3.3.2" id="1376588637616" licenseCode="CLPXDMULES37812333BY" licenseType="Commercial" modified="Wed Aug 14 14:29:41 PDT 2013" modifiedBy="albin" name="so2itemfulfillment_grf" revision="1.0" showComponentDetails="false">
+<?xml version="1.0" encoding="UTF-8"?><Graph author="albin" created="Wed Aug 14 14:29:41 PDT 2013" guiVersion="3.3.2" id="1376588637616" licenseCode="CLPXDMULES37812333BY" licenseType="Commercial" modified="Wed Aug 14 14:29:41 PDT 2013" modifiedBy="albin" name="so2itemfulfillment_grf" revision="1.0" showComponentDetails="false">
 <Global>
 <Metadata __index="48" __referenceCounter="0" __sourcePath="{}/object/customFieldList/customField" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="f6365fd7-ab54-4165-aba0-45bd5190c856" _parent_id="__parent_id" _type="Input" id="b9bf9d11-cff1-4aa4-9652-94761c59c5e2">
 <Record fieldDelimiter="|" name="customField" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
@@ -96,7 +95,7 @@
 <Field __index="72" __sourcePath="{}/object/itemList/item/inventoryDetail/inventoryAssignmentList/inventoryAssignment/toBinNumber/type" containerType="SINGLE" label="type" name="type_2" type="string"/>
 </Record>
 </Metadata>
-<Metadata __index="111" __referenceCounter="1" __sourcePath="{}/object/itemList/item" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="f6365fd7-ab54-4165-aba0-45bd5190c856" _parent_id="__parent_id" _type="Input" id="ca58953f-f530-4b2b-8521-fb35f173e272">
+<Metadata __index="111" __referenceCounter="0" __sourcePath="{}/object/itemList/item" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="f6365fd7-ab54-4165-aba0-45bd5190c856" _parent_id="__parent_id" _type="Input" id="ca58953f-f530-4b2b-8521-fb35f173e272">
 <Record fieldDelimiter="|" name="item" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
 <Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
 <Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
@@ -477,7 +476,7 @@
 <Field __index="283" __sourcePath="{}/object/partnersList/partners/partnerRole/type" containerType="SINGLE" label="type" name="type_1" type="string"/>
 </Record>
 </Metadata>
-<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/object" _dataStructure="OBJECT" _id="__id" _type="Input" id="f6365fd7-ab54-4165-aba0-45bd5190c856">
+<Metadata __index="0" __referenceCounter="0" __sourcePath="{}/object" _dataStructure="OBJECT" _id="__id" _type="Input" id="f6365fd7-ab54-4165-aba0-45bd5190c856">
 <Record fieldDelimiter="|" name="SalesOrder" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
 <Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
 <Field __dmType="Calendar" __index="0" __sourcePath="{}/object/actualShipDate" containerType="SINGLE" label="actualShipDate" name="actualShipDate" type="string"/>
@@ -843,7 +842,7 @@
 </Dictionary>
 </Global>
 <Phase number="0">
-<Node enabled="enabled" fileURL="dict:inputPayload" guiHeight="0" guiName="Pojo READER" guiWidth="0" guiX="20" guiY="20" id="BEAN_READER0" type="BEAN_READER">
+<Node enabled="enabled" fileURL="dict:inputPayload" guiName="Pojo READER" guiX="20" guiY="20" id="BEAN_READER0" type="BEAN_READER">
 <attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Context outPort="0" sequenceField="__id" xpath=".">
   <Mapping cloverField="actualShipDate" trim="true" xpath="actualShipDate"/>
@@ -1590,7 +1589,7 @@
 </schema-object>
 ]]></attr>
 </Node>
-<Node enabled="enabled" fileURL="dict:outputPayload" guiHeight="0" guiName="Pojo WRITER" guiWidth="0" guiX="900" guiY="20" id="BEAN_WRITER0" type="BEAN_WRITER">
+<Node enabled="enabled" fileURL="dict:outputPayload" guiName="Pojo WRITER" guiX="900" guiY="20" id="BEAN_WRITER0" type="BEAN_WRITER">
 <attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <object xmlns:clover="http://www.cloveretl.com/ns/xmlmapping" clover:inPort="0">
   <accessibilityTypeFedEx>$0.accessibilityTypeFedEx</accessibilityTypeFedEx>
@@ -2113,7 +2112,7 @@
 </schema-object>
 ]]></attr>
 </Node>
-<Node enabled="enabled" guiHeight="0" guiName="Foreach 'object' -&gt; 'object'" guiWidth="0" guiX="460" guiY="20" id="REFORMAT0" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<Node enabled="enabled" guiName="Foreach 'object' -&gt; 'object'" guiX="460" guiY="20" id="REFORMAT0" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
 <attr name="melScript"><![CDATA[//MEL
 //START -> DO NOT REMOVE
 output.__id = input.__id;
@@ -2123,7 +2122,7 @@ output.__id = input.__id;
 output.internalId = input.internalId_15;
 output.type = 'SALES_ORDER';]]></attr>
 </Node>
-<Node enabled="enabled" guiHeight="0" guiName="Foreach 'item' -&gt; 'item'" guiWidth="0" guiX="460" guiY="220" id="REFORMAT2" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<Node enabled="enabled" guiName="Foreach 'item' -&gt; 'item'" guiX="460" guiY="220" id="REFORMAT2" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
 <attr name="melScript"><![CDATA[//MEL
 //START -> DO NOT REMOVE
 output.__id = input.__id;
